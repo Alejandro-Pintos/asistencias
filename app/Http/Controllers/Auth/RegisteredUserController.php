@@ -11,16 +11,21 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use App\Models\Classroom;
 
 class RegisteredUserController extends Controller
 {
     /**
      * Display the registration view.
      */
-    public function create(): View
-    {
-        return view('auth.register');
-    }
+public function create(): View
+{
+    $classrooms = Classroom::orderBy('name')->get();
+
+    return view('auth.register', [
+        'classrooms' => $classrooms,
+    ]);
+}
 
     /**
      * Handle an incoming registration request.
@@ -33,13 +38,21 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            //NUEVO CAMPO:
+            'classrooms' => ['nullable', 'array'],
+            'classrooms.*' => ['integer', 'exists:classrooms,id'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'student',
         ]);
+        if ($request->filled('classrooms')) {
+    $user->classrooms()->attach($request->input('classrooms'));
+        }
+
 
         event(new Registered($user));
 

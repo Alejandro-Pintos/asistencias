@@ -6,43 +6,34 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
+use App\Models\Classroom;
+use App\Models\Attendance;
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    // ...
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    // Clases donde está inscripto (como alumno)
+    public function classrooms()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsToMany(Classroom::class, 'classroom_user')
+            ->withTimestamps();
+    }
+
+    // Clases donde es profesor
+    public function classroomsAsTeacher()
+    {
+        return $this->hasMany(Classroom::class, 'teacher_id');
+    }
+
+    // Asistencias donde es alumno
+    public function attendancesAsStudent()
+    {
+        return $this->hasMany(Attendance::class, 'student_id');
+    }
+
+    // Asistencias que él tomó (como profesor)
+    public function attendancesTaken()
+    {
+        return $this->hasMany(Attendance::class, 'taken_by');
     }
 }
