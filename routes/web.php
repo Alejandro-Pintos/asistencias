@@ -45,7 +45,9 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     })->name('admin.dashboard');
     
     // Gestión de profesores
-    Route::resource('admin/profesores', ProfesorController::class)->names([
+    Route::resource('admin/profesores', ProfesorController::class)->parameters([
+        'profesores' => 'profesor'
+    ])->names([
         'index' => 'admin.profesores.index',
         'create' => 'admin.profesores.create',
         'store' => 'admin.profesores.store',
