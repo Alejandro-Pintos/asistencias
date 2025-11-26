@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-white leading-tight">
             Panel de Profesor
         </h2>
     </x-slot>
@@ -23,7 +23,7 @@
                 $classes = auth()->user()->classroomsAsTeacher;
             @endphp
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-[#1A2236] overflow-hidden shadow-lg sm:rounded-lg border border-[#2A3548]">
                 <div class="p-6">
                     <h4 class="text-lg font-semibold mb-4 text-gray-800">
                         Mis Clases
@@ -45,36 +45,36 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             @foreach ($classes as $classroom)
                                 <a href="{{ route('profesor.classrooms.attendance.edit', $classroom) }}"
-                                   class="block border-2 border-gray-200 rounded-lg p-4 hover:border-blue-500 hover:shadow-md transition-all">
+                                   class="block bg-[#232E47] border-2 border-[#2A3548] rounded-lg p-4 hover:border-green-500 hover:shadow-lg transition-all">
                                     <div class="flex items-start justify-between mb-3">
                                         <div class="flex-1">
-                                            <h5 class="font-bold text-gray-800 text-lg">
+                                            <h5 class="font-bold text-white text-lg">
                                                 {{ $classroom->name }}
                                             </h5>
                                             @if($classroom->subject)
-                                                <p class="text-sm text-gray-600">
+                                                <p class="text-sm text-gray-400">
                                                     {{ $classroom->subject }}
                                                 </p>
                                             @endif
                                         </div>
                                         @if($classroom->shift)
                                             <span class="px-2 py-1 text-xs font-semibold rounded-full 
-                                                {{ $classroom->shift === 'mañana' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                                                {{ $classroom->shift === 'tarde' ? 'bg-orange-100 text-orange-800' : '' }}
-                                                {{ $classroom->shift === 'noche' ? 'bg-indigo-100 text-indigo-800' : '' }}">
+                                                {{ $classroom->shift === 'mañana' ? 'bg-yellow-500/20 text-yellow-400' : '' }}
+                                                {{ $classroom->shift === 'tarde' ? 'bg-orange-500/20 text-orange-400' : '' }}
+                                                {{ $classroom->shift === 'noche' ? 'bg-indigo-500/20 text-indigo-400' : '' }}">
                                                 {{ ucfirst($classroom->shift) }}
                                             </span>
                                         @endif
                                     </div>
                                     
-                                    <div class="flex items-center text-sm text-gray-500 mb-3">
+                                    <div class="flex items-center text-sm text-gray-400 mb-3">
                                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                                         </svg>
                                         {{ $classroom->students->count() }} alumno(s)
                                     </div>
 
-                                    <div class="flex items-center text-blue-600 text-sm font-medium">
+                                    <div class="flex items-center text-green-400 text-sm font-medium">
                                         Tomar asistencia
                                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
