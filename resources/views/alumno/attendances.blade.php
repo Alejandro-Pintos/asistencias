@@ -110,10 +110,6 @@
     </div>
 
     {{-- ===================== WEBSOCKETS DEL ALUMNO ===================== --}}
-    @php
-        $classroomIds = $attendances->pluck('classroom_id')->unique()->values();
-    @endphp
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
@@ -135,12 +131,25 @@
             classroomIds.forEach(id => {
                 console.log('[alumno] → Subscribiendo a classroom.' + id);
 
-                window.Echo.channel('classroom.' + id)
-                    .listen('.AttendanceUpdated', (event) => {
-                        console.log('%c[alumno] Evento recibido', 'color: green', event);
-
+                const channel = window.Echo.channel('classroom.' + id);
+                
+                // Escuchar el evento sin el punto inicial
+                channel.listen('.AttendanceUpdated', (event) => {
+                    console.log('%c[alumno] ✅ Evento .AttendanceUpdated recibido - RECARGANDO PÁGINA', 'color: green; font-weight: bold; font-size: 14px', event);
+                    window.location.reload();
+                });
+                
+                channel.listenToAll((eventName, data) => {
+                    console.log('%c[alumno] 📡 Cualquier evento recibido:', 'color: orange', eventName, data);
+                    
+                    // Fallback: recargar con cualquier evento
+                    if (eventName === '.AttendanceUpdated') {
+                        console.log('[alumno] ⚡ Recargando por listenToAll');
                         window.location.reload();
-                    });
+                    }
+                });
+                
+                console.log('[alumno] ✓ Listeners registrados para classroom.' + id);
             });
 
         });

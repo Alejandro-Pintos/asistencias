@@ -72,10 +72,17 @@ class ClassroomAttendanceController extends Controller
         }
 
         // 3) Disparamos evento de broadcast para los alumnos
-        event(new AttendanceUpdated(
+        \Log::info('[BACKEND] Disparando evento AttendanceUpdated', [
+            'classroom_id' => $classroom->id,
+            'date' => $data['date'],
+        ]);
+        
+        broadcast(new AttendanceUpdated(
             $classroom->id,
             $data['date']
-        ));
+        ))->toOthers();
+        
+        \Log::info('[BACKEND] Evento broadcast ejecutado');
 
         // 4) Volvemos al formulario con mensaje
         return redirect()
