@@ -110,10 +110,6 @@
     </div>
 
     {{-- ===================== WEBSOCKETS DEL ALUMNO ===================== --}}
-    @php
-        $classroomIds = $attendances->pluck('classroom_id')->unique()->values();
-    @endphp
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 

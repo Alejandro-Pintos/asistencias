@@ -20,10 +20,14 @@ class AttendanceController extends Controller
             ->groupBy('status')
             ->map->count();
 
+        // Obtener IDs de todas las clases en las que está inscripto (no solo las que tienen asistencia)
+        $classroomIds = $student->classrooms()->pluck('classrooms.id');
+
         return view('alumno.attendances', [
             'student'     => $student,
             'attendances' => $attendances,
             'summary'     => $summary,
+            'classroomIds' => $classroomIds,
         ]);
     }
 }
