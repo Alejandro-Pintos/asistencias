@@ -83,13 +83,19 @@
                                             <a href="{{ route('admin.classrooms.edit', $classroom) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">
                                                 Editar
                                             </a>
-                                            <form action="{{ route('admin.classrooms.destroy', $classroom) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Estás seguro de eliminar esta clase?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900">
+                                            @if($classroom->students->count() === 0)
+                                                <form action="{{ route('admin.classrooms.destroy', $classroom) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Estás seguro de eliminar esta clase?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 hover:text-red-900">
+                                                        Eliminar
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <span class="text-gray-400 cursor-not-allowed" title="No se puede eliminar una clase con alumnos inscriptos">
                                                     Eliminar
-                                                </button>
-                                            </form>
+                                                </span>
+                                            @endif
                                         </td>
                                     </tr>
                                 @empty

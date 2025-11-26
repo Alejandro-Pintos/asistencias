@@ -60,13 +60,19 @@
                                             <a href="{{ route('admin.profesores.edit', $profesor) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">
                                                 Editar
                                             </a>
-                                            <form action="{{ route('admin.profesores.destroy', $profesor) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Estás seguro de eliminar este profesor?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900">
+                                            @if($profesor->classroomsAsTeacher->count() === 0)
+                                                <form action="{{ route('admin.profesores.destroy', $profesor) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Estás seguro de eliminar este profesor?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 hover:text-red-900">
+                                                        Eliminar
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <span class="text-gray-400 cursor-not-allowed" title="No se puede eliminar un profesor con clases asignadas">
                                                     Eliminar
-                                                </button>
-                                            </form>
+                                                </span>
+                                            @endif
                                         </td>
                                     </tr>
                                 @empty
