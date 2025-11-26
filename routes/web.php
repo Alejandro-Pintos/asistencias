@@ -6,7 +6,10 @@ use App\Http\Controllers\Teacher\ClassroomAttendanceController;
 use App\Http\Controllers\Student\AttendanceController as StudentAttendanceController;
 
 Route::get('/', function () {
-    return view('welcome');
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+    return redirect()->route('login');
 });
 
 // Dashboard genérico: redirige según el rol del usuario
