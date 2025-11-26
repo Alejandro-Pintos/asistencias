@@ -3,13 +3,14 @@
 namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class AttendanceUpdated implements ShouldBroadcast
+class AttendanceUpdated implements ShouldBroadcastNow
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public int $classroomId;
     public string $date;
@@ -18,6 +19,11 @@ class AttendanceUpdated implements ShouldBroadcast
     {
         $this->classroomId = $classroomId;
         $this->date = $date;
+        
+        \Log::info('[EVENT] AttendanceUpdated creado', [
+            'classroom_id' => $classroomId,
+            'date' => $date,
+        ]);
     }
 
     // Canal público: classroom.{id}

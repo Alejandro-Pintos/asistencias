@@ -9,6 +9,18 @@
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
+        <!-- Clases -->
+        <div class="mt-4">
+            <x-input-label for="classrooms" :value="__('Clases a inscribirse')" />
+            <select id="classrooms" name="classrooms[]" class="block mt-1 w-full rounded border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" multiple>
+                @foreach($classrooms as $classroom)
+                    <option value="{{ $classroom->id }}">{{ $classroom->name }} - {{ $classroom->subject }}</option>
+                @endforeach
+            </select>
+            <small class="text-gray-500">Puedes seleccionar una o varias clases usando Ctrl o Shift.</small>
+            <x-input-error :messages="$errors->get('classrooms')" class="mt-2" />
+        </div>
+
         <!-- Email Address -->
         <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />

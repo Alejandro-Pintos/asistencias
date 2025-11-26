@@ -10,7 +10,13 @@ use App\Models\Classroom;
 use App\Models\Attendance;
 class User extends Authenticatable
 {
-    // ...
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role',
+    ];
 
     // Clases donde está inscripto (como alumno)
     public function classrooms()
