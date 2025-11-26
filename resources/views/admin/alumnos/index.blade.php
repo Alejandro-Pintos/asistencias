@@ -7,10 +7,16 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            @if (session('status'))
+                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded">
+                    <p class="font-medium">✓ {{ session('status') }}</p>
+                </div>
+            @endif
+
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     <div class="mb-4 text-sm text-gray-600">
-                        Los alumnos se registran a través del formulario de registro público. Aquí puedes ver la lista de todos los estudiantes registrados.
+                        Los alumnos se registran a través del formulario de registro público. Aquí puedes ver y editar la lista de todos los estudiantes registrados.
                     </div>
                     
                     <div class="overflow-x-auto">
@@ -28,6 +34,9 @@
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Fecha Registro
+                                    </th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Acciones
                                     </th>
                                 </tr>
                             </thead>
@@ -62,10 +71,15 @@
                                                 {{ $alumno->created_at->format('d/m/Y') }}
                                             </div>
                                         </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="{{ route('admin.alumnos.edit', $alumno) }}" class="text-indigo-600 hover:text-indigo-900">
+                                                Editar
+                                            </a>
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">
                                             No hay alumnos registrados aún.
                                         </td>
                                     </tr>

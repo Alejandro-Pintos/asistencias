@@ -66,6 +66,8 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     
     // Gestión de alumnos (solo vista de lista)
     Route::get('admin/alumnos', [AlumnoController::class, 'index'])->name('admin.alumnos.index');
+    Route::get('admin/alumnos/{alumno}/edit', [AlumnoController::class, 'edit'])->name('admin.alumnos.edit');
+    Route::put('admin/alumnos/{alumno}', [AlumnoController::class, 'update'])->name('admin.alumnos.update');
 });
 
 // Panel PROFESOR / PRECEPTOR: tomar asistencias
