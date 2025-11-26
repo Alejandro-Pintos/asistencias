@@ -10,10 +10,16 @@ use App\Http\Controllers\Admin\AlumnoController;
 
 Route::get('/', function () {
     if (auth()->check()) {
-        return redirect()->route('dashboard');
+        $user = auth()->user();
+        return match ($user->role) {
+            'admin'   => redirect()->route('admin.dashboard'),
+            'teacher' => redirect()->route('profesor.dashboard'),
+            'student' => redirect()->route('alumno.dashboard'),
+            default   => redirect()->route('login'),
+        };
     }
     return redirect()->route('login');
-});
+})->name('home');
 
 // Dashboard genérico: redirige según el rol del usuario
 Route::get('/dashboard', function () {
@@ -26,7 +32,8 @@ Route::get('/dashboard', function () {
     return match ($user->role) {
         'admin'   => redirect()->route('admin.dashboard'),
         'teacher' => redirect()->route('profesor.dashboard'),
-        default   => redirect()->route('alumno.dashboard'), // student u otro
+        'student' => redirect()->route('alumno.dashboard'),
+        default   => redirect()->route('login'),
     };
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -76,28 +83,28 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
 });
 
 // Panel PROFESOR / PRECEPTOR: tomar asistencias
-Route::middleware(['auth', 'verified', 'role:teacher'])->group(function () {
-    Route::get('/profesor', function () {
+Route::middleware(['auth', 'verified', 'role:teacher'])->prefix('profesor')->name('profesor.')->group(function () {
+    Route::get('/', function () {
         return view('profesor.dashboard');
-    })->name('profesor.dashboard');
+    })->name('dashboard');
 
     // Rutas para tomar asistencias en las clases del profesor
-    Route::get('/profesor/classrooms/{classroom}/attendance', [ClassroomAttendanceController::class, 'edit'])
-        ->name('profesor.classrooms.attendance.edit');
+    Route::get('/classrooms/{classroom}/attendance', [ClassroomAttendanceController::class, 'edit'])
+        ->name('classrooms.attendance.edit');
 
-            Route::post('/profesor/classrooms/{classroom}/attendance', [ClassroomAttendanceController::class, 'update'])
-        ->name('profesor.classrooms.attendance.update');
-
+    Route::post('/classrooms/{classroom}/attendance', [ClassroomAttendanceController::class, 'update'])
+        ->name('classrooms.attendance.update');
 });
 
 // Panel ALUMNO: ver compañeros, estado de asistencias propias, etc.
-Route::middleware(['auth', 'verified', 'role:student'])->group(function () {
-    Route::get('/alumno', function () {
+Route::middleware(['auth', 'verified', 'role:student'])->prefix('alumno')->name('alumno.')->group(function () {
+    Route::get('/', function () {
         return view('alumno.dashboard');
-    })->name('alumno.dashboard');
-      // Nueva ruta: ver asistencias del alumno
-    Route::get('/alumno/asistencias', [StudentAttendanceController::class, 'index'])
-        ->name('alumno.attendances.index');
+    })->name('dashboard');
+    
+    // Nueva ruta: ver asistencias del alumno
+    Route::get('/asistencias', [StudentAttendanceController::class, 'index'])
+        ->name('attendances.index');
 });
 
 require __DIR__.'/auth.php';

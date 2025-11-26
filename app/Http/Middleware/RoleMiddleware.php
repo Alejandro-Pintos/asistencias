@@ -21,7 +21,13 @@ class RoleMiddleware
         $userRole = auth()->user()->role;
 
         if (! in_array($userRole, $roles, true)) {
-            abort(403); // Prohibido
+            // Redirigir al dashboard correcto según el rol del usuario
+            return match ($userRole) {
+                'admin'   => redirect()->route('admin.dashboard'),
+                'teacher' => redirect()->route('profesor.dashboard'),
+                'student' => redirect()->route('alumno.dashboard'),
+                default   => redirect()->route('login'),
+            };
         }
 
         return $next($request);
