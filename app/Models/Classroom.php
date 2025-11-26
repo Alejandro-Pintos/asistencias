@@ -13,6 +13,7 @@ class Classroom extends Model
         'name',
         'subject',
         'teacher_id',
+        'shift',
     ];
 
     // Profesor a cargo de la clase

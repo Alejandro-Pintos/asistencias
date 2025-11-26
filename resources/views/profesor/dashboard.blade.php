@@ -1,58 +1,89 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Panel de Profesor / Preceptor') }}
+            Panel de Profesor
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-semibold mb-4">
-                        Bienvenido, {{ auth()->user()->name }} 👋
+            <!-- Bienvenida -->
+            <div class="bg-gradient-to-r from-blue-500 to-cyan-600 overflow-hidden shadow-lg sm:rounded-lg">
+                <div class="p-6 text-white">
+                    <h3 class="text-2xl font-bold mb-2">
+                        👋 Bienvenido, {{ auth()->user()->name }}
                     </h3>
+                    <p class="text-blue-100">
+                        Gestiona la asistencia de tus clases
+                    </p>
+                </div>
+            </div>
 
-                    @php
-                        $classes = auth()->user()->classroomsAsTeacher;
-                    @endphp
+            @php
+                $classes = auth()->user()->classroomsAsTeacher;
+            @endphp
 
-                    <h4 class="text-md font-semibold mb-2">
-                        Tus clases / cursos
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6">
+                    <h4 class="text-lg font-semibold mb-4 text-gray-800">
+                        Mis Clases
                     </h4>
 
                     @if ($classes->isEmpty())
-                        <p class="text-sm text-gray-600">
-                            Todavía no tenés clases asignadas.
-                            El administrador podrá crearlas y asignártelas.
-                        </p>
+                        <div class="text-center py-8">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                            <p class="mt-2 text-sm text-gray-600">
+                                Todavía no tenés clases asignadas.
+                            </p>
+                            <p class="text-xs text-gray-500 mt-1">
+                                El administrador puede crear clases y asignártelas.
+                            </p>
+                        </div>
                     @else
-                        <div class="mt-2 space-y-2">
-@foreach ($classes as $classroom)
-    <a href="{{ route('profesor.classrooms.attendance.edit', $classroom) }}"
-       class="block border rounded-md px-3 py-2 text-sm text-gray-800 bg-gray-50 hover:bg-gray-100 transition">
-        <div class="font-semibold">
-            {{ $classroom->name }}
-            @if($classroom->subject)
-                – {{ $classroom->subject }}
-            @endif
-        </div>
-        <div class="text-xs text-gray-600">
-            ID: {{ $classroom->id }}
-        </div>
-        <div class="text-xs text-blue-600 mt-1">
-            Tomar asistencia →
-        </div>
-    </a>
-@endforeach
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            @foreach ($classes as $classroom)
+                                <a href="{{ route('profesor.classrooms.attendance.edit', $classroom) }}"
+                                   class="block border-2 border-gray-200 rounded-lg p-4 hover:border-blue-500 hover:shadow-md transition-all">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex-1">
+                                            <h5 class="font-bold text-gray-800 text-lg">
+                                                {{ $classroom->name }}
+                                            </h5>
+                                            @if($classroom->subject)
+                                                <p class="text-sm text-gray-600">
+                                                    {{ $classroom->subject }}
+                                                </p>
+                                            @endif
+                                        </div>
+                                        @if($classroom->shift)
+                                            <span class="px-2 py-1 text-xs font-semibold rounded-full 
+                                                {{ $classroom->shift === 'mañana' ? 'bg-yellow-100 text-yellow-800' : '' }}
+                                                {{ $classroom->shift === 'tarde' ? 'bg-orange-100 text-orange-800' : '' }}
+                                                {{ $classroom->shift === 'noche' ? 'bg-indigo-100 text-indigo-800' : '' }}">
+                                                {{ ucfirst($classroom->shift) }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                    
+                                    <div class="flex items-center text-sm text-gray-500 mb-3">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                        </svg>
+                                        {{ $classroom->students->count() }} alumno(s)
+                                    </div>
 
+                                    <div class="flex items-center text-blue-600 text-sm font-medium">
+                                        Tomar asistencia
+                                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </div>
+                                </a>
+                            @endforeach
                         </div>
                     @endif
-
-                    <p class="mt-6 text-sm text-gray-500">
-                        Después, desde cada clase vas a poder abrir la pantalla para
-                        tomar asistencia por fecha y ver el historial.
-                    </p>
                 </div>
             </div>
         </div>

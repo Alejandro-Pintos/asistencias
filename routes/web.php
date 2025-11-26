@@ -4,6 +4,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Teacher\ClassroomAttendanceController;
 use App\Http\Controllers\Student\AttendanceController as StudentAttendanceController;
+use App\Http\Controllers\Admin\ProfesorController;
+use App\Http\Controllers\Admin\ClassroomController as AdminClassroomController;
+use App\Http\Controllers\Admin\AlumnoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -40,6 +43,29 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/admin', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
+    
+    // Gestión de profesores
+    Route::resource('admin/profesores', ProfesorController::class)->names([
+        'index' => 'admin.profesores.index',
+        'create' => 'admin.profesores.create',
+        'store' => 'admin.profesores.store',
+        'edit' => 'admin.profesores.edit',
+        'update' => 'admin.profesores.update',
+        'destroy' => 'admin.profesores.destroy',
+    ]);
+    
+    // Gestión de clases/materias
+    Route::resource('admin/classrooms', AdminClassroomController::class)->names([
+        'index' => 'admin.classrooms.index',
+        'create' => 'admin.classrooms.create',
+        'store' => 'admin.classrooms.store',
+        'edit' => 'admin.classrooms.edit',
+        'update' => 'admin.classrooms.update',
+        'destroy' => 'admin.classrooms.destroy',
+    ]);
+    
+    // Gestión de alumnos (solo vista de lista)
+    Route::get('admin/alumnos', [AlumnoController::class, 'index'])->name('admin.alumnos.index');
 });
 
 // Panel PROFESOR / PRECEPTOR: tomar asistencias
